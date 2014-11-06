@@ -25,14 +25,14 @@ const unsigned int mesh_height = 40;
 const unsigned int size = mesh_height * mesh_width;
 
 
-bool ppause = true;
+bool ppause = false;
 bool showWing = false;
 bool showBox = true;
 bool showPhontain = true;
 bool showForce = true;
 bool showGravityForce = false;
 bool showCoordinates = false;
-bool saveResults = true;
+bool saveResults = false;
 
 float box = 5.f;
 const float3 f = make_float3(10.f, 0.f, 0.f);
@@ -42,8 +42,7 @@ std::ofstream myfile;
 
 const float3 phontain = make_float3(-box / 2.f, 0.f, 0.f);
 Wing wing;
-ParticleSystemPhountain<float3, float4, Wing>* pSystem = 
-    new ParticleSystemPhountain<float3, float4, Wing>(size, box, wing, phontain);
+ParticleSystemPhountain<Wing>* pSystem = new ParticleSystemPhountain<Wing>(size, box, wing, phontain);
 
 int	nFPS = 0, nFrames = 0;
 unsigned int dwLastFPS = 0;
@@ -101,7 +100,6 @@ float calculateEnergy()
         const float3 vel = pSystem->getVel(i);
         energy += ((vel.x * vel.x + vel.y * vel.y + vel.z * vel.z) / 2.f);
     }
-
     return energy;
 }
 
@@ -110,8 +108,8 @@ void move()
     for (unsigned i = 0; i < size; i++)
         pSystem->boxCollision(i);
 
-    //for (unsigned i = 0; i < size; i++)
-    for (unsigned i = 0; i < size - 1; i++)
+    for (unsigned i = 0; i < size; i++)
+    //for (unsigned i = 0; i < size - 1; i++)
         pSystem->particleCollision(i);
 
     for (unsigned i = 0; i < size; i++)
